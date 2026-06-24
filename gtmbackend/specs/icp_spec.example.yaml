@@ -1,0 +1,46 @@
+# icp_spec.example.yaml
+#
+# Example ICP spec for the FB/ad-agency outbound offer.
+# Copy this file, rename per offer (e.g. icp_spec.saas_cfo.yaml), and edit.
+# Pass it to score_leads.py with --spec specs/icp_spec.example.yaml
+#
+# Field rules:
+#   primary_signals    weighted high — direct buying predictors
+#   secondary_signals  supportive context only; never decisive on their own
+#   hard_disqualifiers absolute gates — any one caps fit_score at 2
+#   value_blockers     soft penalties — looks like ICP but won't convert
+#   anchors            offer-specific overrides of Surveyor defaults
+
+offer: >
+  Done-for-you outbound client acquisition (cold email infrastructure +
+  campaigns) for small marketing / ad agencies that want predictable new
+  client flow without hiring an SDR.
+
+primary_signals:
+  - Runs paid ads (Meta/Facebook, Google, performance) FOR CLIENTS
+  - Positions as marketing / media / digital / performance agency
+  - Founder/owner-led, small team (3-20)
+  - Serves ecom / DTC / SMB clients (has clients to grow)
+
+secondary_signals:
+  - Active case studies / client logos
+  - Retainer or high-ticket service model
+  - Recent hiring or growth language
+
+hard_disqualifiers:
+  - Has a visible SDR / BDR / sales-development team
+  - Explicitly advertises its own cold-email / outbound motion
+  - Enterprise consultancy or 50+ employees with formal sales org
+  - Not a client-facing marketing/agency business
+  - SaaS / pure tech product company
+  - Local non-marketing business (dentist, restaurant, etc.)
+
+value_blockers:
+  - Mentions an existing lead-gen / appointment-setting partner
+  - Inbound-saturated (waitlist, "not taking clients")
+
+anchors:
+  "10": Explicit small Meta/FB ads agency, founder-led, no outbound mention
+  "7-9": Clear paid-media / performance agency, small, no outbound system seen
+  "4-6": Some agency signals but unclear niche, size, or paid-media focus
+  "1-3": Not a marketing agency, or has strong outbound already
