@@ -2,6 +2,13 @@
 
 Local-first GTM stack. SQLite backend + Next.js frontend for managing and viewing leads. Manage campaigns through instantly.
 
+## Screenshots
+
+![Overview](screenshots/fin1.png)
+![Leads](screenshots/fin2.png)
+![Scraping](screenshots/fin3.png)
+![Scoring](screenshots/fin4.png)
+
 ## Structure
 
 ```
