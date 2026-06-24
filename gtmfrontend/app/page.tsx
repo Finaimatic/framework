@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { Sidebar, type Tab } from './components/Sidebar'
 import { Overview } from './components/Overview'
 import { LeadsTable } from './components/LeadsTable'
+import { ListsTab } from './components/ListsTab'
+import { ScrapingTab } from './components/ScrapingTab'
+import { ScoringTab } from './components/ScoringTab'
 
 export default function HomePage() {
   const [tab, setTab] = useState<Tab>('overview')
@@ -12,8 +15,11 @@ export default function HomePage() {
     <div className="flex min-h-screen" style={{ background: '#0f172a' }}>
       <Sidebar tab={tab} setTab={setTab} />
       <main className="flex-1 ml-52 min-w-0 overflow-hidden px-8 py-8">
-        {tab === 'overview' && <Overview />}
-        {tab === 'leads'    && <LeadsTable />}
+        {tab === 'overview'  && <Overview />}
+        {tab === 'leads'     && <LeadsTable />}
+        {tab === 'lists'     && <ListsTab />}
+        {tab === 'scraping'  && <ScrapingTab />}
+        {tab === 'scoring'   && <ScoringTab />}
       </main>
     </div>
   )

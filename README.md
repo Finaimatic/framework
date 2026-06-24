@@ -1,6 +1,6 @@
 # Finaimatic GTM Framework
 
-Local-first GTM stack. SQLite backend + Next.js frontend for managing and viewing leads.
+Local-first GTM stack. SQLite backend + Next.js frontend for managing and viewing leads. Manage campaigns through instantly.
 
 ## Structure
 

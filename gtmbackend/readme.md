@@ -2,6 +2,13 @@
 
 SQLite-backed data store for GTM lead management.
 
+## Screenshots
+
+![Overview](../screenshots/fin1.png)
+![Leads](../screenshots/fin2.png)
+![Scraping](../screenshots/fin3.png)
+![Scoring](../screenshots/fin4.png)
+
 ## Setup
 
 ```bash

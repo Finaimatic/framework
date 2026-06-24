@@ -1,0 +1,77 @@
+SCORING REPORT — Surveyor ICP Fit
+Generated : 2026-06-24 20:48
+Model     : anthropic/claude-haiku-4-5
+Evaluated : 8 companies
+============================================================
+
+Domain    : diggrowth.com
+Score     : 3/10  tier=skip  confidence=high
+Disqual.  : True  (Is itself an outbound/sales-tooling vendor (competitor, won't buy))
+Signals   : none
+Blockers  : DiGGrowth is a GTM/marketing automation vendor selling AI agents for paid media, email, ICP analytics, and lead enrichment — directly competitive to the outbound/sales-tooling category the spec targets, Targets CMOs, performance marketers, RevOps, and marketing agencies — not founder-led B2B SaaS companies seeking outbound support, Offers its own lead enrichment (ReachGen), ICP analytics, and campaign optimization — would not buy external outbound/SDR services
+Reason    : DiGGrowth is a GTM/marketing automation platform, not a buyer of outbound services. It competes in the space (AI agents for lead gen, attribution, ICP analytics) rather than consuming it. Hard disqualifier: competitor/vendor, not prospect.
+
+------------------------------------------------------------
+
+Domain    : nxthorizon.ai
+Score     : 2/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Business model is consulting/services, not SaaS product, Sells GTM strategy, activation, and branding services to enterprises, Not a software vendor; would not be a buyer of outbound/SDR tooling
+Reason    : NXT Horizon is a B2B consulting and services firm specializing in go-to-market strategy, demand generation, and brand consulting for manufacturers, healthcare, and A&D. It is not a software product company and does not fit the SaaS outbound profile. As a services vendor, it is a non-buyer for the ICP's target market.
+
+------------------------------------------------------------
+
+Domain    : socialtechstudio.com
+Score     : 2/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Business model is services-based (custom software development, system integration, digital marketing consulting), not a SaaS product, Positioned as a vendor/partner selling to other businesses, not a software company with its own GTM motion, No indication of a scalable software product or sales-assisted SaaS motion
+Reason    : Socialtech Studio is a digital services agency offering custom software development, system integration, and marketing consulting. This is a consultancy/services firm, not a B2B SaaS company with a product to sell. It trips the hard disqualifier 'Agency / services / consultancy (not a software product)' and is therefore not a prospect for an outbound sales/SDR tool.
+
+------------------------------------------------------------
+
+Domain    : trypropel.ai
+Score     : 2/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Propel is a services/agency firm, not a SaaS product — they sell done-for-you lifecycle marketing execution and strategy, They are a vendor/consultant, not a buyer of outbound/sales tools, Target customer profile is DTC/e-commerce brands and enterprises needing retention marketing services, not B2B SaaS founders needing SDR/outbound tooling
+Reason    : Trypropel.ai is a lifecycle marketing agency and consulting firm, not a B2B SaaS company with a sales-assisted motion. They sell professional services (strategy, campaign execution, email design, analytics) to DTC and enterprise brands. This is a hard disqualifier under the spec: 'Agency / services / consultancy (not a software product).' They are a vendor, not a prospect for outbound sales tooling.
+
+------------------------------------------------------------
+
+Domain    : brainfactory.de
+Score     : 1/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Services agency, not B2B SaaS vendor, Sells marketing/branding/design services, not software, No sales-assisted SaaS motion or ACV model, Germany-based, not US, Would be a buyer of outbound tools, not a target for outbound prospecting
+Reason    : brainfactory.de is a B2B marketing and branding agency based in Stuttgart, Germany. It delivers strategy, design, and campaign services—not software. This is a hard disqualifier under the spec: the ICP targets B2B SaaS vendors with sales-assisted motions and high ACV, not service firms. The company is geographically out of scope (Germany, not US) and is a services business, not a software product.
+
+------------------------------------------------------------
+
+Domain    : creativemedusa.co
+Score     : 1/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Creative services agency, not B2B SaaS, No software product or sales-assisted motion, Service-based revenue model (retainers, hourly packages), Not a buyer of outbound/sales tools — a creative vendor
+Reason    : Creative Medusa is a design and creative services agency based in Uruguay, not a B2B SaaS company. They sell design retainers, motion graphics, and AI content services to brands — they are a service provider, not a software vendor with a sales motion. This is a hard disqualifier per the spec.
+
+------------------------------------------------------------
+
+Domain    : ddmg.ca
+Score     : 1/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Services firm, not B2B SaaS, Canada-based (Quebec/Toronto), not US, PR/communications agency model, not software, No sales-assisted SaaS motion or ACV structure
+Reason    : DDMG Communications (now part of Substance) is a PR and communications agency offering strategic consulting, media relations, events, and content services. This is a services/consultancy business, not a software product, and is Canada-based. It trips the hard disqualifier for non-SaaS agencies and fails the US-based requirement.
+
+------------------------------------------------------------
+
+Domain    : socialhit.co.uk
+Score     : 1/10  tier=skip  confidence=high
+Disqual.  : True  (Agency / services / consultancy (not a software product))
+Signals   : none
+Blockers  : Service agency, not B2B SaaS software vendor, UK-based, not US, Sells marketing services to D2C brands, not a software buyer
+Reason    : Social Hit is a TikTok marketing agency providing services (paid ads, creator partnerships, strategy, PR/events) to D2C brands. It is a services/consultancy firm, not a software product, and is UK-based. It trips the hard disqualifier for agency/services and non-US presence. Not a prospect for outbound sales tooling.
+
+------------------------------------------------------------

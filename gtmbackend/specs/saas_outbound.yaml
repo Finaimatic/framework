@@ -6,7 +6,6 @@
 # Pass to score_leads.py with --spec specs/icp_spec.saas_outbound.yaml
 
 
-
 primary_signals:
   - B2B SaaS selling to businesses (not B2C, not pure PLG/self-serve)
   - Sales-assisted motion — "Book a demo" / "Talk to sales" CTA, not signup-only

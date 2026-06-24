@@ -6,13 +6,16 @@ import {
   getCoreRowModel,
   flexRender,
   type ColumnDef,
+  type RowSelectionState,
 } from '@tanstack/react-table'
+import { SaveToListDialog } from './SaveToListDialog'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8002'
 
 const sel = 'px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-slate-200 text-sm focus:outline-none focus:border-indigo-500'
 
-interface Lead {
+export interface Lead {
+  id: number
   full_name: string | null
   title: string | null
   seniority: string | null
@@ -22,6 +25,9 @@ interface Lead {
   import_name: string
   created_at: string | null
   linkedin_link: string | null
+  scraped: boolean
+  fit_score: number | null
+  tier: string | null
 }
 
 interface LeadsResponse {
@@ -39,7 +45,7 @@ function bright(v: React.ReactNode) {
   return <span className="text-slate-200 text-xs">{v ?? <span className="text-slate-700">—</span>}</span>
 }
 
-const COLUMNS: ColumnDef<Lead, unknown>[] = [
+const DATA_COLUMNS: ColumnDef<Lead, unknown>[] = [
   {
     id: 'full_name', header: 'Name',
     cell: ({ row: { original: r } }) => r.linkedin_link
@@ -70,6 +76,20 @@ const COLUMNS: ColumnDef<Lead, unknown>[] = [
     cell: ({ row: { original: r } }) => bright(r.company_name),
   },
   {
+    id: 'scraped', header: 'Scraped',
+    cell: ({ row: { original: r } }) => r.scraped
+      ? <span className="text-emerald-400 text-xs">✓</span>
+      : <span className="text-slate-700 text-xs">—</span>,
+  },
+  {
+    id: 'fit_score', header: 'Score',
+    cell: ({ row: { original: r } }) => r.fit_score != null
+      ? <span className={`text-xs font-semibold ${r.fit_score >= 7 ? 'text-emerald-400' : r.fit_score >= 4 ? 'text-amber-400' : 'text-slate-500'}`}>
+          {r.fit_score}/10{r.tier ? ` · ${r.tier}` : ''}
+        </span>
+      : <span className="text-slate-700 text-xs">—</span>,
+  },
+  {
     id: 'lead_country', header: 'Country',
     cell: ({ row: { original: r } }) => dim(r.lead_country),
   },
@@ -84,13 +104,17 @@ const COLUMNS: ColumnDef<Lead, unknown>[] = [
 ]
 
 export function LeadsTable() {
-  const [data, setData]           = useState<LeadsResponse | null>(null)
-  const [loading, setLoading]     = useState(false)
-  const [page, setPage]           = useState(1)
-  const [search, setSearch]       = useState('')
+  const [data, setData]               = useState<LeadsResponse | null>(null)
+  const [loading, setLoading]         = useState(false)
+  const [page, setPage]               = useState(1)
+  const [search, setSearch]           = useState('')
   const [searchInput, setSearchInput] = useState('')
-  const [country, setCountry]     = useState('')
-  const [countries, setCountries] = useState<string[]>([])
+  const [country, setCountry]         = useState('')
+  const [countries, setCountries]     = useState<string[]>([])
+  const [scraped, setScraped]         = useState('')
+  const [scored, setScored]           = useState('')
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false)
 
   useEffect(() => {
     fetch(`${API}/leads/countries`)
@@ -104,11 +128,13 @@ export function LeadsTable() {
     const params = new URLSearchParams({ page: String(page), per_page: '50' })
     if (search)  params.set('search', search)
     if (country) params.set('country', country)
+    if (scraped) params.set('scraped', scraped)
+    if (scored)  params.set('scored', scored)
     fetch(`${API}/leads?${params}`)
       .then(r => r.json())
       .then((d: LeadsResponse) => { setData(d); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [page, search, country])
+  }, [page, search, country, scraped, scored])
 
   useEffect(() => { fetchData() }, [fetchData])
 
@@ -122,18 +148,45 @@ export function LeadsTable() {
     setSearchInput('')
     setSearch('')
     setCountry('')
+    setScraped('')
+    setScored('')
     setPage(1)
+  }
+
+  const checkboxCol: ColumnDef<Lead, unknown> = {
+    id: 'select',
+    header: ({ table }) => (
+      <input type="checkbox"
+        checked={table.getIsAllPageRowsSelected()}
+        ref={el => { if (el) el.indeterminate = table.getIsSomePageRowsSelected() }}
+        onChange={table.getToggleAllPageRowsSelectedHandler()}
+        className="accent-indigo-500 cursor-pointer"
+      />
+    ),
+    cell: ({ row }) => (
+      <input type="checkbox"
+        checked={row.getIsSelected()}
+        onChange={row.getToggleSelectedHandler()}
+        onClick={e => e.stopPropagation()}
+        className="accent-indigo-500 cursor-pointer"
+      />
+    ),
   }
 
   const table = useReactTable({
     data: data?.results ?? [],
-    columns: COLUMNS,
+    columns: [checkboxCol, ...DATA_COLUMNS],
+    state: { rowSelection },
+    onRowSelectionChange: setRowSelection,
+    getRowId: row => String(row.id),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: data?.pages ?? 1,
+    enableRowSelection: true,
   })
 
-  const hasFilters = search || searchInput || country
+  const selectedIds = Object.keys(rowSelection).map(Number)
+  const hasFilters = search || searchInput || country || scraped || scored
 
   return (
     <div className="space-y-4">
@@ -145,13 +198,19 @@ export function LeadsTable() {
           onChange={e => setSearchInput(e.target.value)}
           className="px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-slate-200 text-sm placeholder-slate-500 w-72 focus:outline-none focus:border-indigo-500"
         />
-        <select
-          value={country}
-          onChange={e => { setCountry(e.target.value); setPage(1) }}
-          className={sel}
-        >
+        <select value={country} onChange={e => { setCountry(e.target.value); setPage(1) }} className={sel}>
           <option value="">All countries</option>
           {countries.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+        <select value={scraped} onChange={e => { setScraped(e.target.value); setPage(1) }} className={sel}>
+          <option value="">All (scraped)</option>
+          <option value="yes">Scraped</option>
+          <option value="no">Not scraped</option>
+        </select>
+        <select value={scored} onChange={e => { setScored(e.target.value); setPage(1) }} className={sel}>
+          <option value="">All (scored)</option>
+          <option value="yes">Scored</option>
+          <option value="no">Not scored</option>
         </select>
         <button type="submit"
           className="px-3 py-2 rounded-lg border border-indigo-600 bg-indigo-900/40 text-indigo-300 text-sm hover:bg-indigo-900/70 transition-colors">
@@ -163,11 +222,20 @@ export function LeadsTable() {
             Reset
           </button>
         )}
+        {selectedIds.length > 0 && (
+          <button type="button" onClick={() => setSaveDialogOpen(true)}
+            className="ml-auto px-3 py-2 rounded-lg border border-amber-600/60 bg-amber-900/30 text-amber-300 text-sm hover:bg-amber-900/50 transition-colors">
+            Save {selectedIds.length} to list
+          </button>
+        )}
       </form>
 
       {data && (
         <div className="text-slate-400 text-sm">
           {data.total.toLocaleString()} leads · page {data.page} of {data.pages}
+          {selectedIds.length > 0 && (
+            <span className="ml-3 text-amber-400">{selectedIds.length} selected</span>
+          )}
         </div>
       )}
 
@@ -187,7 +255,7 @@ export function LeadsTable() {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={COLUMNS.length} className="px-4 py-16 text-center">
+              <tr><td colSpan={DATA_COLUMNS.length + 1} className="px-4 py-16 text-center">
                 <div className="flex flex-col items-center gap-3 text-slate-400">
                   <svg className="animate-spin h-8 w-8 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
@@ -198,7 +266,9 @@ export function LeadsTable() {
               </td></tr>
             )}
             {!loading && table.getRowModel().rows.map(row => (
-              <tr key={row.id} className="border-b border-slate-700/50 hover:bg-slate-700/30">
+              <tr key={row.id}
+                className={`border-b border-slate-700/50 hover:bg-slate-700/30 cursor-pointer ${row.getIsSelected() ? 'bg-indigo-900/20' : ''}`}
+                onClick={() => row.toggleSelected()}>
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id} className="px-3 py-2">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -207,7 +277,7 @@ export function LeadsTable() {
               </tr>
             ))}
             {!loading && data?.results.length === 0 && (
-              <tr><td colSpan={COLUMNS.length} className="px-4 py-10 text-center text-slate-500 text-sm">
+              <tr><td colSpan={DATA_COLUMNS.length + 1} className="px-4 py-10 text-center text-slate-500 text-sm">
                 No leads found.
               </td></tr>
             )}
@@ -227,6 +297,14 @@ export function LeadsTable() {
             Next
           </button>
         </div>
+      )}
+
+      {saveDialogOpen && (
+        <SaveToListDialog
+          leadIds={selectedIds}
+          onClose={() => setSaveDialogOpen(false)}
+          onSaved={() => { setSaveDialogOpen(false); setRowSelection({}) }}
+        />
       )}
     </div>
   )

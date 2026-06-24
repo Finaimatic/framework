@@ -10,10 +10,11 @@ venv/
 dist/
 build/
 
-# Env
+# Env / secrets
 .env
 .env.local
 *.env
+config.toml
 
 # DB
 *.db

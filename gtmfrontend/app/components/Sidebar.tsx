@@ -1,10 +1,13 @@
 'use client'
 
-export type Tab = 'overview' | 'leads'
+export type Tab = 'overview' | 'leads' | 'lists' | 'scraping' | 'scoring'
 
 const NAV: { tab: Tab; label: string }[] = [
-  { tab: 'overview', label: 'Overview' },
-  { tab: 'leads',    label: 'Leads' },
+  { tab: 'overview',  label: 'Overview' },
+  { tab: 'leads',     label: 'Leads' },
+  { tab: 'lists',     label: 'Lists' },
+  { tab: 'scraping',  label: 'Scraping' },
+  { tab: 'scoring',   label: 'Scoring' },
 ]
 
 interface SidebarProps {
